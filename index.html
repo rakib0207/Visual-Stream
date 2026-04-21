@@ -16,7 +16,9 @@
             overflow: hidden;
         }
 
-        /* Setup Screen */
+        /* ========================
+           SETUP SCREEN
+        ======================== */
         .setup-screen {
             height: 100vh;
             display: flex;
@@ -58,7 +60,7 @@
             box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
         }
 
-        /* Clear Button (Plus Style) */
+        /* New Script Button */
         .btn-clear {
             position: absolute;
             top: 2rem;
@@ -83,7 +85,9 @@
             transform: rotate(90deg);
         }
 
-        /* Speed Slider */
+        /* ========================
+           SPEED SLIDER
+        ======================== */
         .speed-slider {
             -webkit-appearance: none;
             height: 4px;
@@ -101,7 +105,9 @@
             cursor: pointer;
         }
 
-        /* Countdown */
+        /* ========================
+           COUNTDOWN
+        ======================== */
         #countdown-overlay {
             position: fixed;
             inset: 0;
@@ -115,7 +121,9 @@
             color: #58a6ff;
         }
 
-        /* Stream Interface */
+        /* ========================
+           STREAM SCREEN
+        ======================== */
         #stream-screen {
             display: none;
             height: 100vh;
@@ -125,13 +133,12 @@
             position: relative;
         }
 
-        /* Scroll Area Configuration */
         #scroll-area {
             flex-grow: 1;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            padding: 120px 2.5rem 100px 2.5rem; 
+            padding: 120px 2.5rem 100px 2.5rem;
             height: 100%;
             scroll-behavior: smooth;
         }
@@ -144,9 +151,9 @@
             flex-direction: column;
         }
 
-        .message-bubble { 
-            line-height: 1.9; 
-            font-size: 1.5rem; 
+        .message-bubble {
+            line-height: 1.9;
+            font-size: 1.5rem;
             white-space: pre-wrap;
             margin-bottom: 35px;
             color: #f0f6fc;
@@ -165,21 +172,28 @@
 
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* Header UI */
+        /* ========================
+           HEADER
+        ======================== */
         .header-nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 85px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
+            flex-direction: column;
+            padding: 0.75rem 1.5rem;
             background: rgba(13, 17, 23, 0.95);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid #30363d;
             z-index: 100;
+        }
+
+        .header-main-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 52px;
         }
 
         .brand-logo {
@@ -212,24 +226,111 @@
         }
 
         .btn-pause { background: #d29922; color: #0d1117; }
-        .btn-stop { background: rgba(248, 81, 73, 0.1); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.4); }
+        .btn-stop  { background: rgba(248, 81, 73, 0.1); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.4); }
+
+        /* Mobile speed bar — hidden by default */
+        #mobile-speed-bar {
+            display: none;
+        }
+
+        /* ========================
+           MOBILE STYLES
+        ======================== */
+        @media (max-width: 639px) {
+
+            /* Countdown smaller */
+            #countdown-overlay {
+                font-size: 5rem;
+            }
+
+            /* Setup screen adjustments */
+            .setup-screen {
+                padding: 1rem;
+                justify-content: flex-start;
+                padding-top: 2.5rem;
+            }
+
+            .input-card {
+                padding: 1.5rem;
+                border-radius: 12px;
+            }
+
+            textarea {
+                height: 180px;
+                font-size: 0.95rem;
+            }
+
+            /* Header adjustments */
+            .header-nav {
+                padding: 0.6rem 1rem;
+            }
+
+            .header-main-row {
+                height: auto;
+            }
+
+            .brand-logo {
+                font-size: 1rem;
+            }
+
+            .status-container {
+                padding: 5px 10px;
+                gap: 6px;
+            }
+
+            /* Bigger touch targets */
+            .btn-action {
+                padding: 10px 18px;
+                font-size: 0.85rem;
+            }
+
+            /* Show mobile speed bar */
+            #mobile-speed-bar {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 0.5rem;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid #30363d;
+                border-radius: 10px;
+                padding: 7px 12px;
+                box-sizing: border-box;
+            }
+
+            /* Scroll area — more top padding for taller mobile header */
+            #scroll-area {
+                padding: 155px 1.2rem 80px 1.2rem;
+            }
+
+            /* Slightly smaller reading text on mobile */
+            .message-bubble {
+                font-size: 1.2rem;
+                line-height: 1.8;
+                margin-bottom: 24px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Setup Screen -->
+    <!-- ========================
+         SETUP SCREEN
+    ======================== -->
     <div id="setup-screen" class="setup-screen">
         <div class="input-card">
-            <!-- New Script Button -->
+
             <button class="btn-clear" onclick="clearText()" title="New Script">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
             </button>
 
             <h1 class="text-3xl font-extrabold mb-1 text-white">Visual Stream</h1>
             <p class="mb-6 text-slate-400 text-sm">Professional Top-Focus Reading System</p>
-            
+
             <textarea id="user-input" placeholder="Paste your script here..."></textarea>
-            
+
             <div class="flex items-center justify-between mt-8">
                 <span class="text-[11px] text-slate-500 italic">Eye-level top-insertion mode</span>
                 <button class="bg-[#238636] hover:bg-[#2ea043] px-10 py-3 rounded-lg font-bold text-white shadow-lg" onclick="startCountdown()">
@@ -239,34 +340,52 @@
         </div>
     </div>
 
+    <!-- Countdown -->
     <div id="countdown-overlay"></div>
 
+    <!-- ========================
+         STREAM SCREEN
+    ======================== -->
     <div id="stream-screen">
         <header class="header-nav">
-            <div class="flex items-center gap-4 md:gap-6">
-                <div class="brand-logo">Visual Stream</div>
-                
-                <div class="status-container">
-                    <div id="status-dot" class="status-dot bg-[#238636] shadow-[0_0_10px_#238636]"></div>
-                    <span id="status-text" class="text-[10px] uppercase font-bold tracking-widest text-slate-400">Live</span>
+
+            <!-- Main Row -->
+            <div class="header-main-row">
+
+                <div class="flex items-center gap-3">
+                    <div class="brand-logo">Visual Stream</div>
+
+                    <div class="status-container">
+                        <div id="status-dot" class="status-dot bg-[#238636] shadow-[0_0_10px_#238636]"></div>
+                        <span id="status-text" class="text-[10px] uppercase font-bold tracking-widest text-slate-400">Live</span>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="status-container">
+                        <span id="progress-text" class="text-[10px] font-bold text-slate-400">0 / 0</span>
+                    </div>
+
+                    <!-- Desktop Speed (hidden on mobile) -->
+                    <div class="live-speed-box hidden sm:flex">
+                        <span class="text-[10px] uppercase font-bold text-slate-500">Speed</span>
+                        <input type="range" id="live-speed" class="speed-slider w-24" min="1" max="5" value="3" step="1">
+                        <span id="speed-indicator" class="text-[10px] font-bold text-[#58a6ff] min-w-[35px]">Normal</span>
+                    </div>
                 </div>
 
-                <!-- Progress Indicator -->
-                <div class="status-container">
-                    <span id="progress-text" class="text-[10px] font-bold text-slate-400">0 / 0</span>
-                </div>
-
-                <div class="live-speed-box hidden sm:flex">
-                    <span class="text-[10px] uppercase font-bold text-slate-500">Speed</span>
-                    <input type="range" id="live-speed" class="speed-slider w-24" min="1" max="5" value="3" step="1">
-                    <span id="speed-indicator" class="text-[10px] font-bold text-[#58a6ff] min-w-[35px]">Normal</span>
+                <div class="flex gap-3">
+                    <button id="pause-btn" class="btn-action btn-pause" onclick="togglePause()">Pause</button>
+                    <button class="btn-action btn-stop" onclick="stopStream()">Reset</button>
                 </div>
             </div>
 
-            <div class="flex gap-3">
-                <button id="pause-btn" class="btn-action btn-pause" onclick="togglePause()">Pause</button>
-                <button class="btn-action btn-stop" onclick="stopStream()">Reset</button>
+            <!-- Mobile Speed Bar (visible only on mobile via CSS) -->
+            <div id="mobile-speed-bar">
+                <span class="text-[10px] uppercase font-bold text-slate-500">Speed</span>
+                <input type="range" id="mobile-speed" class="speed-slider flex-1" min="1" max="5" value="3" step="1">
+                <span id="mobile-speed-indicator" class="text-[10px] font-bold text-[#58a6ff] min-w-[45px]">Normal</span>
             </div>
+
         </header>
 
         <div id="scroll-area">
@@ -275,38 +394,52 @@
     </div>
 
     <script>
-        const setupScreen = document.getElementById('setup-screen');
-        const countdownOverlay = document.getElementById('countdown-overlay');
-        const streamScreen = document.getElementById('stream-screen');
-        const messagesContainer = document.getElementById('messages-container');
-        const scrollArea = document.getElementById('scroll-area');
-        const userInput = document.getElementById('user-input');
-        const pauseBtn = document.getElementById('pause-btn');
-        const liveSpeed = document.getElementById('live-speed');
-        const speedIndicator = document.getElementById('speed-indicator');
-        const statusDot = document.getElementById('status-dot');
-        const statusText = document.getElementById('status-text');
-        const progressText = document.getElementById('progress-text');
+        const setupScreen          = document.getElementById('setup-screen');
+        const countdownOverlay     = document.getElementById('countdown-overlay');
+        const streamScreen         = document.getElementById('stream-screen');
+        const messagesContainer    = document.getElementById('messages-container');
+        const scrollArea           = document.getElementById('scroll-area');
+        const userInput            = document.getElementById('user-input');
+        const pauseBtn             = document.getElementById('pause-btn');
+        const liveSpeed            = document.getElementById('live-speed');
+        const mobileSpeed          = document.getElementById('mobile-speed');
+        const speedIndicator       = document.getElementById('speed-indicator');
+        const mobileSpeedIndicator = document.getElementById('mobile-speed-indicator');
+        const statusDot            = document.getElementById('status-dot');
+        const statusText           = document.getElementById('status-text');
+        const progressText         = document.getElementById('progress-text');
 
-        let contents = [];
-        let isPaused = false;
+        let contents  = [];
+        let isPaused  = false;
         let isStopped = false;
         let baseDelay = 100;
 
         const delayMap = [220, 160, 100, 60, 25];
         const labelMap = ["Slowest", "Slow", "Normal", "Fast", "Fastest"];
 
-        // Load saved draft from localStorage
+        // Load saved draft
         userInput.value = localStorage.getItem('vs-draft') || '';
 
-        // Save draft on every keystroke
+        // Auto-save draft on every keystroke
         userInput.addEventListener('input', () => {
             localStorage.setItem('vs-draft', userInput.value);
         });
 
+        // Desktop speed — synced with mobile
         liveSpeed.addEventListener('input', () => {
             const val = parseInt(liveSpeed.value);
-            speedIndicator.textContent = labelMap[val - 1];
+            speedIndicator.textContent       = labelMap[val - 1];
+            mobileSpeed.value                = val;
+            mobileSpeedIndicator.textContent = labelMap[val - 1];
+            baseDelay = delayMap[val - 1];
+        });
+
+        // Mobile speed — synced with desktop
+        mobileSpeed.addEventListener('input', () => {
+            const val = parseInt(mobileSpeed.value);
+            mobileSpeedIndicator.textContent = labelMap[val - 1];
+            liveSpeed.value                  = val;
+            speedIndicator.textContent       = labelMap[val - 1];
             baseDelay = delayMap[val - 1];
         });
 
@@ -319,35 +452,37 @@
         function startCountdown() {
             const rawText = userInput.value.trim();
 
-            // Empty input validation
             if (!rawText) {
-                userInput.style.borderColor = '#f85149';
-                userInput.style.boxShadow = '0 0 0 2px rgba(248, 81, 73, 0.1)';
-                userInput.placeholder = 'Please paste something first...';
+                userInput.style.borderColor  = '#f85149';
+                userInput.style.boxShadow    = '0 0 0 2px rgba(248, 81, 73, 0.1)';
+                userInput.placeholder        = 'Please paste something first...';
                 userInput.focus();
                 setTimeout(() => {
                     userInput.style.borderColor = '#30363d';
-                    userInput.style.boxShadow = 'none';
-                    userInput.placeholder = 'Paste your script here...';
+                    userInput.style.boxShadow   = 'none';
+                    userInput.placeholder       = 'Paste your script here...';
                 }, 2000);
                 return;
             }
 
-            contents = rawText.split('\n').filter(line => line.trim() !== "");
+            contents  = rawText.split('\n').filter(line => line.trim() !== "");
             isStopped = false;
-            isPaused = false;
-            setupScreen.style.display = 'none';
+            isPaused  = false;
+
+            setupScreen.style.display    = 'none';
             countdownOverlay.style.display = 'flex';
+
             let count = 3;
             countdownOverlay.textContent = count;
+
             const timer = setInterval(() => {
                 count--;
-                if (count > 0) countdownOverlay.textContent = count;
+                if (count > 0)        countdownOverlay.textContent = count;
                 else if (count === 0) countdownOverlay.textContent = "READY";
                 else {
                     clearInterval(timer);
                     countdownOverlay.style.display = 'none';
-                    streamScreen.style.display = 'flex';
+                    streamScreen.style.display     = 'flex';
                     startStreaming();
                 }
             }, 1000);
@@ -355,23 +490,25 @@
 
         function togglePause() {
             isPaused = !isPaused;
-            pauseBtn.innerHTML = isPaused ? "Resume" : "Pause";
+            pauseBtn.innerHTML        = isPaused ? "Resume" : "Pause";
             pauseBtn.style.background = isPaused ? "#238636" : "#d29922";
-            statusDot.className = isPaused ? 'status-dot bg-[#d29922] shadow-[0_0_10px_#d29922]' : 'status-dot bg-[#238636] shadow-[0_0_10px_#238636]';
+            statusDot.className       = isPaused
+                ? 'status-dot bg-[#d29922] shadow-[0_0_10px_#d29922]'
+                : 'status-dot bg-[#238636] shadow-[0_0_10px_#238636]';
             statusText.textContent = isPaused ? "Paused" : "Live";
         }
 
         function stopStream() {
             isStopped = true;
-            isPaused = false;
-            streamScreen.style.display = 'none';
-            setupScreen.style.display = 'flex';
+            isPaused  = false;
+            streamScreen.style.display  = 'none';
+            setupScreen.style.display   = 'flex';
             messagesContainer.innerHTML = "";
-            pauseBtn.innerHTML = "Pause";
-            pauseBtn.style.background = "#d29922";
-            progressText.textContent = "0 / 0";
-            statusDot.className = 'status-dot bg-[#238636] shadow-[0_0_10px_#238636]';
-            statusText.textContent = "Live";
+            pauseBtn.innerHTML          = "Pause";
+            pauseBtn.style.background   = "#d29922";
+            progressText.textContent    = "0 / 0";
+            statusDot.className         = 'status-dot bg-[#238636] shadow-[0_0_10px_#238636]';
+            statusText.textContent      = "Live";
         }
 
         async function startStreaming() {
@@ -382,10 +519,9 @@
                 await typeMessage(contents[i]);
             }
 
-            // Completion state
             if (!isStopped) {
-                statusDot.className = 'status-dot bg-[#bc8cff] shadow-[0_0_10px_#bc8cff]';
-                statusText.textContent = "Done";
+                statusDot.className      = 'status-dot bg-[#bc8cff] shadow-[0_0_10px_#bc8cff]';
+                statusText.textContent   = "Done";
                 progressText.textContent = '✓ Complete';
             }
         }
@@ -393,7 +529,7 @@
         async function typeMessage(text) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message-bubble';
-            const textSpan = document.createElement('span');
+            const textSpan   = document.createElement('span');
             const cursorSpan = document.createElement('span');
             cursorSpan.className = 'cursor';
             messageDiv.appendChild(textSpan);
@@ -414,8 +550,6 @@
                 }
 
                 textSpan.textContent += text.charAt(i);
-
-                // Smooth scroll using scrollIntoView
                 cursorSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
                 await new Promise(r => setTimeout(r, Math.random() * (baseDelay / 3) + baseDelay));
@@ -430,7 +564,7 @@
             await new Promise(r => setTimeout(r, 500));
         }
 
-        // Space bar shortcut for Pause / Resume
+        // Space bar = Pause / Resume (desktop only)
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' && streamScreen.style.display === 'flex') {
                 e.preventDefault();
