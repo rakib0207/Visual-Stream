@@ -50,6 +50,7 @@
             outline: none;
             transition: all 0.3s ease;
             resize: none;
+            box-sizing: border-box;
         }
 
         textarea:focus {
@@ -76,9 +77,9 @@
         }
 
         .btn-clear:hover {
-            background: rgba(248, 81, 73, 0.1);
-            color: #f85149;
-            border-color: #f85149;
+            background: rgba(88, 166, 255, 0.1);
+            color: #58a6ff;
+            border-color: #58a6ff;
             transform: rotate(90deg);
         }
 
@@ -219,8 +220,8 @@
     <!-- Setup Screen -->
     <div id="setup-screen" class="setup-screen">
         <div class="input-card">
-            <!-- Clear Button (+) -->
-            <button class="btn-clear" onclick="clearText()" title="Clear Content">
+            <!-- New Script Button -->
+            <button class="btn-clear" onclick="clearText()" title="New Script">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
 
@@ -248,6 +249,11 @@
                 <div class="status-container">
                     <div id="status-dot" class="status-dot bg-[#238636] shadow-[0_0_10px_#238636]"></div>
                     <span id="status-text" class="text-[10px] uppercase font-bold tracking-widest text-slate-400">Live</span>
+                </div>
+
+                <!-- Progress Indicator -->
+                <div class="status-container">
+                    <span id="progress-text" class="text-[10px] font-bold text-slate-400">0 / 0</span>
                 </div>
 
                 <div class="live-speed-box hidden sm:flex">
@@ -280,6 +286,7 @@
         const speedIndicator = document.getElementById('speed-indicator');
         const statusDot = document.getElementById('status-dot');
         const statusText = document.getElementById('status-text');
+        const progressText = document.getElementById('progress-text');
 
         let contents = [];
         let isPaused = false;
@@ -289,21 +296,43 @@
         const delayMap = [220, 160, 100, 60, 25];
         const labelMap = ["Slowest", "Slow", "Normal", "Fast", "Fastest"];
 
+        // Load saved draft from localStorage
+        userInput.value = localStorage.getItem('vs-draft') || '';
+
+        // Save draft on every keystroke
+        userInput.addEventListener('input', () => {
+            localStorage.setItem('vs-draft', userInput.value);
+        });
+
         liveSpeed.addEventListener('input', () => {
             const val = parseInt(liveSpeed.value);
             speedIndicator.textContent = labelMap[val - 1];
             baseDelay = delayMap[val - 1];
         });
 
-        // Noutun: Text clear korar function
         function clearText() {
             userInput.value = "";
+            localStorage.removeItem('vs-draft');
             userInput.focus();
         }
 
         function startCountdown() {
             const rawText = userInput.value.trim();
-            if (!rawText) return;
+
+            // Empty input validation
+            if (!rawText) {
+                userInput.style.borderColor = '#f85149';
+                userInput.style.boxShadow = '0 0 0 2px rgba(248, 81, 73, 0.1)';
+                userInput.placeholder = 'Please paste something first...';
+                userInput.focus();
+                setTimeout(() => {
+                    userInput.style.borderColor = '#30363d';
+                    userInput.style.boxShadow = 'none';
+                    userInput.placeholder = 'Paste your script here...';
+                }, 2000);
+                return;
+            }
+
             contents = rawText.split('\n').filter(line => line.trim() !== "");
             isStopped = false;
             isPaused = false;
@@ -340,13 +369,24 @@
             messagesContainer.innerHTML = "";
             pauseBtn.innerHTML = "Pause";
             pauseBtn.style.background = "#d29922";
+            progressText.textContent = "0 / 0";
+            statusDot.className = 'status-dot bg-[#238636] shadow-[0_0_10px_#238636]';
+            statusText.textContent = "Live";
         }
 
         async function startStreaming() {
             messagesContainer.innerHTML = "";
             for (let i = 0; i < contents.length; i++) {
                 if (isStopped) break;
+                progressText.textContent = `${i + 1} / ${contents.length}`;
                 await typeMessage(contents[i]);
+            }
+
+            // Completion state
+            if (!isStopped) {
+                statusDot.className = 'status-dot bg-[#bc8cff] shadow-[0_0_10px_#bc8cff]';
+                statusText.textContent = "Done";
+                progressText.textContent = '✓ Complete';
             }
         }
 
@@ -362,7 +402,7 @@
             messagesContainer.insertBefore(messageDiv, messagesContainer.firstChild);
 
             const bubbles = messagesContainer.getElementsByClassName('message-bubble');
-            for(let b=1; b<bubbles.length; b++) {
+            for (let b = 1; b < bubbles.length; b++) {
                 bubbles[b].style.opacity = Math.max(0.15, 1 - (b * 0.3));
             }
 
@@ -375,22 +415,28 @@
 
                 textSpan.textContent += text.charAt(i);
 
-                const rect = cursorSpan.getBoundingClientRect();
-                if (rect.bottom > window.innerHeight - 80) {
-                    scrollArea.scrollTop += 30;
-                }
-                
-                await new Promise(r => setTimeout(r, Math.random() * (baseDelay/3) + baseDelay));
+                // Smooth scroll using scrollIntoView
+                cursorSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                await new Promise(r => setTimeout(r, Math.random() * (baseDelay / 3) + baseDelay));
             }
 
             cursorSpan.remove();
 
             const extraWait = scrollArea.scrollTop > 0 ? baseDelay * 25 : baseDelay * 15;
-            await new Promise(r => setTimeout(r, extraWait)); 
-            
+            await new Promise(r => setTimeout(r, extraWait));
+
             scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
-            await new Promise(r => setTimeout(r, 500)); 
+            await new Promise(r => setTimeout(r, 500));
         }
+
+        // Space bar shortcut for Pause / Resume
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && streamScreen.style.display === 'flex') {
+                e.preventDefault();
+                togglePause();
+            }
+        });
     </script>
 </body>
 </html>
